@@ -22,11 +22,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        mRingProgressBar = (RingProgressBar) findViewById(
-                R.id.holoCircularProgressBar);
-
-        mRingProgressBar.setMarkerEnabled(false);
-        mRingProgressBar.setThumbEnabled(true);
+        mRingProgressBar = (RingProgressBar) findViewById(R.id.holoCircularProgressBar);
 
         m01 = (Button) findViewById(R.id.animate_01);
         mZero = (Button) findViewById(R.id.zero);
@@ -35,13 +31,15 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         m01.setOnClickListener(this);
         mZero.setOnClickListener(this);
         mOne.setOnClickListener(this);
+
+        mRingProgressBar.setWheelSize(40);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.animate_01:
-                mRingProgressBar.startUpdateProgress(mRingProgressBar.getProgress() + 0.1f);
+                mRingProgressBar.startUpdateProgress(mRingProgressBar.getProgress() + 1f/4, 500);
                 break;
             case R.id.zero:
                 mRingProgressBar.stopUpdateProgress();
@@ -49,7 +47,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.one:
                 mRingProgressBar.stopUpdateProgress();
-                mRingProgressBar.startUpdateProgress(1f, 2000);
+                mRingProgressBar.startUpdateProgress(mRingProgressBar.getProgress() + 1f, 2000);
                 break;
         }
     }
