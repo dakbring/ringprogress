@@ -6,6 +6,8 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
@@ -63,6 +65,11 @@ public class RingProgressBar extends View {
      * The Vertical inset calcualted in {@link #computeInsets(int, int, int)}
      */
     private int mVerticalInset = 0;
+
+    /**
+     * The HalfWidth
+     */
+    private float mHalfWidth = 0f;
 
     /**
      * The gravity of the view. Where should the Circle be drawn within the given bounds
@@ -223,6 +230,11 @@ public class RingProgressBar extends View {
         mFirst100.draw(canvas);
         mSecond100.draw(canvas);
         mThird100.draw(canvas);
+
+        // draw icon
+        canvas.translate(0, -mTranslationOffsetY);
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+        canvas.drawBitmap(bm, -bm.getWidth()/2, 0, null);
     }
 
     @Override
@@ -251,13 +263,13 @@ public class RingProgressBar extends View {
 
         setMeasuredDimension(diameter, diameter);
 
-        final float halfWidth = diameter * 0.5f;
-        mTranslationOffsetX = halfWidth + mHorizontalInset;
-        mTranslationOffsetY = halfWidth + mVerticalInset;
+        mHalfWidth = diameter * 0.5f;
+        mTranslationOffsetX = mHalfWidth + mHorizontalInset;
+        mTranslationOffsetY = mHalfWidth + mVerticalInset;
 
-        mFirst100.measure(halfWidth);
-        mSecond100.measure(halfWidth * 0.9f);
-        mThird100.measure(halfWidth * 0.8f);
+        mFirst100.measure(mHalfWidth);
+        mSecond100.measure(mHalfWidth * 0.9f);
+        mThird100.measure(mHalfWidth * 0.8f);
     }
 
     @Override
