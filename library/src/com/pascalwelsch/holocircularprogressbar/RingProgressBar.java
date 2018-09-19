@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -32,9 +30,46 @@ public class RingProgressBar extends View {
     private static final int DEFAULT_ANIMATION_DURATION = 1000;
 
     /**
+     * The Translation offset x which gives us the ability to use our own coordinates system.
+     */
+    private float mTranslationOffsetX;
+
+    /**
+     * The Translation offset y which gives us the ability to use our own coordinates system.
+     */
+    private float mTranslationOffsetY;
+
+    /**
      * used to draw ring progress
      */
-    private ARing mARing;
+    private ARing mFirst100;
+
+    /**
+     * used to draw ring progress
+     */
+    private ARing mSecond100;
+
+    /**
+     * used to draw ring progress
+     */
+    private ARing mThird100;
+
+    /**
+     * The Horizontal inset calcualted in {@link #computeInsets(int, int, int)}
+     */
+    private int mHorizontalInset = 0;
+
+    /**
+     * The Vertical inset calcualted in {@link #computeInsets(int, int, int)}
+     */
+    private int mVerticalInset = 0;
+
+    /**
+     * The gravity of the view. Where should the Circle be drawn within the given bounds
+     * <p>
+     * {@link #computeInsets(int, int, int)}
+     */
+    private int mGravity = Gravity.CENTER;
 
     /**
      * true if not all properties are set. then the view isn't drawn and there are no errors in the
@@ -77,7 +112,9 @@ public class RingProgressBar extends View {
                            final int defStyle) {
         super(context, attrs, defStyle);
 
-        mARing = new ARing();
+        mFirst100 = new ARing();
+        mSecond100 = new ARing();
+        mThird100 = new ARing();
 
         // load the styled attributes and set their properties
         final TypedArray attributes = context
@@ -111,7 +148,9 @@ public class RingProgressBar extends View {
             }
         }
 
-        mARing.initLayout();
+        mFirst100.initLayout();
+        mSecond100.initLayout();
+        mThird100.initLayout();
         invalidate();
 
         // the view has now all properties and can be drawn
@@ -119,11 +158,59 @@ public class RingProgressBar extends View {
     }
 
     /**
-     * set gravity of the progress
+     * Compute insets.
+     * <p>
+     * <pre>
+     *  ______________________
+     * |_________dx/2_________|
+     * |......| /'''''\|......|
+     * |-dx/2-|| View ||-dx/2-|
+     * |______| \_____/|______|
+     * |________ dx/2_________|
+     * </pre>
+     *
+     * @param dx the dx the horizontal unfilled space
+     * @param dy the dy the horizontal unfilled space
+     */
+    @SuppressLint("NewApi")
+    void computeInsets(int layoutDirection, final int dx, final int dy) {
+        int absoluteGravity = mGravity;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            absoluteGravity = Gravity.getAbsoluteGravity(mGravity, layoutDirection);
+        }
+
+        switch (absoluteGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+            case Gravity.LEFT:
+                mHorizontalInset = 0;
+                break;
+            case Gravity.RIGHT:
+                mHorizontalInset = dx;
+                break;
+            case Gravity.CENTER_HORIZONTAL:
+            default:
+                mHorizontalInset = dx / 2;
+                break;
+        }
+        switch (absoluteGravity & Gravity.VERTICAL_GRAVITY_MASK) {
+            case Gravity.TOP:
+                mVerticalInset = 0;
+                break;
+            case Gravity.BOTTOM:
+                mVerticalInset = dy;
+                break;
+            case Gravity.CENTER_VERTICAL:
+            default:
+                mVerticalInset = dy / 2;
+                break;
+        }
+    }
+
+    /**
+     * set gravity of the View
      * @param gravity
      */
-    private void setGravity(int gravity) {
-        mARing.setGravity(gravity);
+    void setGravity(int gravity) {
+        mGravity = gravity;
     }
 
     @Override
@@ -132,8 +219,10 @@ public class RingProgressBar extends View {
         // All of our positions are using our internal coordinate system.
         // Instead of translating
         // them we let Canvas do the work for us.
-
-        mARing.draw(canvas);
+        canvas.translate(mTranslationOffsetX, mTranslationOffsetY);
+        mFirst100.draw(canvas);
+        mSecond100.draw(canvas);
+        mThird100.draw(canvas);
     }
 
     @Override
@@ -149,28 +238,35 @@ public class RingProgressBar extends View {
         if (heightMeasureSpec == MeasureSpec.UNSPECIFIED) {
             // ScrollView
             diameter = width;
-            mARing.computeInsets(getLayoutDirection(),0, 0);
+            computeInsets(getLayoutDirection(),0, 0);
         } else if (widthMeasureSpec == MeasureSpec.UNSPECIFIED) {
             // HorizontalScrollView
             diameter = height;
-            mARing.computeInsets(getLayoutDirection(),0, 0);
+            computeInsets(getLayoutDirection(),0, 0);
         } else {
             // Default
             diameter = Math.min(width, height);
-            mARing.computeInsets(getLayoutDirection(),width - diameter, height - diameter);
+            computeInsets(getLayoutDirection(),width - diameter, height - diameter);
         }
 
         setMeasuredDimension(diameter, diameter);
 
         final float halfWidth = diameter * 0.5f;
-        mARing.measure(halfWidth);
+        mTranslationOffsetX = halfWidth + mHorizontalInset;
+        mTranslationOffsetY = halfWidth + mVerticalInset;
+
+        mFirst100.measure(halfWidth);
+        mSecond100.measure(halfWidth * 0.9f);
+        mThird100.measure(halfWidth * 0.8f);
     }
 
     @Override
     protected void onRestoreInstanceState(final Parcelable state) {
         if (state instanceof Bundle) {
             final Bundle bundle = (Bundle) state;
-            mARing.restoreInstanceState(bundle);
+            mFirst100.restoreInstanceState(bundle);
+            mSecond100.restoreInstanceState(bundle);
+            mThird100.restoreInstanceState(bundle);
             super.onRestoreInstanceState(bundle.getParcelable(INSTANCE_STATE_SAVEDSTATE));
             return;
         }
@@ -182,7 +278,9 @@ public class RingProgressBar extends View {
     protected Parcelable onSaveInstanceState() {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(INSTANCE_STATE_SAVEDSTATE, super.onSaveInstanceState());
-        mARing.saveInstanceState(bundle);
+        mFirst100.saveInstanceState(bundle);
+        mSecond100.saveInstanceState(bundle);
+        mThird100.saveInstanceState(bundle);
         return bundle;
     }
 
@@ -191,9 +289,12 @@ public class RingProgressBar extends View {
      *
      * @param progress the new progress
      */
-    public void setProgress(final float progress) {
-        mARing.setProgress(progress);
-
+    public void setProgress(float progress) {
+            mFirst100.setProgress(progress <= 0f ? 0f : progress >= 1f ? 1f : progress % 1f);
+            progress -= 1f;
+            mSecond100.setProgress(progress <= 0f ? 0f : progress >= 1f ? 1f : progress % 1f);
+            progress -= 1f;
+            mThird100.setProgress(progress <= 0f ? 0f : progress >= 1f ? 1f : progress % 1f);
         if (!mIsInitializing) {
             invalidate();
         }
@@ -205,7 +306,9 @@ public class RingProgressBar extends View {
      * @param progress the new marker progress
      */
     public void setMarkerProgress(final float progress) {
-        mARing.setMarkerProgress(progress);
+        mFirst100.setMarkerProgress(progress);
+        mSecond100.setMarkerProgress(progress);
+        mThird100.setMarkerProgress(progress);
     }
 
     /**
@@ -214,7 +317,9 @@ public class RingProgressBar extends View {
      * @param color the new progress background color
      */
     public void setProgressBackgroundColor(final int color) {
-        mARing.setProgressBackgroundColor(color);
+        mFirst100.setProgressBackgroundColor(color);
+        mSecond100.setProgressBackgroundColor(color);
+        mThird100.setProgressBackgroundColor(color);
         invalidate();
     }
 
@@ -224,7 +329,9 @@ public class RingProgressBar extends View {
      * @param color the new progress color
      */
     public void setProgressColor(final int color) {
-        mARing.setProgressColor(color);
+        mFirst100.setProgressColor(color);
+        mSecond100.setProgressColor(color);
+        mThird100.setProgressColor(color);
         invalidate();
     }
 
@@ -234,7 +341,10 @@ public class RingProgressBar extends View {
      * @param enabled true to show the thumb
      */
     public void setThumbEnabled(final boolean enabled) {
-        mARing.setThumbEnabled(enabled);
+        mFirst100.setThumbEnabled(enabled);
+        mSecond100.setThumbEnabled(enabled);
+        mThird100.setThumbEnabled(enabled);
+        invalidate();
     }
 
     /**
@@ -243,7 +353,9 @@ public class RingProgressBar extends View {
      * @param dimension the new wheel size
      */
     public void setWheelSize(final int dimension) {
-        mARing.setWheelSize(dimension);
+        mFirst100.setWheelSize(dimension);
+        mSecond100.setWheelSize(dimension);
+        mThird100.setWheelSize(dimension);
         invalidate();
     }
 
@@ -310,16 +422,18 @@ public class RingProgressBar extends View {
      * @param enabled the new marker enabled
      */
     public void setMarkerEnabled(final boolean enabled) {
-        mARing.setMarkerEnabled(enabled);
+        mFirst100.setMarkerEnabled(enabled);
+        mSecond100.setMarkerEnabled(enabled);
+        mThird100.setMarkerEnabled(enabled);
     }
 
     /**
-     * gives the current progress of the ProgressBar. Value between 0..1 if you set the progress to
+     * gives the current progress of the ProgressBar. Value between 0..3 if you set the progress to
      * >1 you'll get progress % 1 as return value
      *
      * @return the progress
      */
     public float getProgress() {
-        return mARing.getProgress();
+        return mFirst100.getProgress() + mSecond100.getProgress() + mThird100.getProgress();
     }
 }

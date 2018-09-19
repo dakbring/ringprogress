@@ -28,20 +28,28 @@
         android:text="0"/>
 
     <Button
-        android:id="@+id/one"
+        android:id="@+id/three"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/zero"
         android:layout_alignBottom="@+id/zero"
         android:layout_toRightOf="@+id/zero"
-        android:text="1"/>
+        android:text="3"/>
 
     <Button
-        android:id="@+id/animate_01"
+        android:id="@+id/plus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="animate"/>
+        android:text=" + "/>
+
+    <Button
+        android:id="@+id/minus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/zero"
+        android:layout_toStartOf="@+id/plus"
+        android:text=" - " />
 
 </RelativeLayout>

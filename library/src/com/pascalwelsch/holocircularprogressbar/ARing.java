@@ -1,12 +1,9 @@
 package com.pascalwelsch.holocircularprogressbar;
 
-import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 
 public class ARing {
 
@@ -39,16 +36,6 @@ public class ARing {
      * used to save and restore the visibility of the marker in this instance
      */
     private static final String INSTANCE_STATE_MARKER_VISIBLE = "marker_visible";
-
-    /**
-     * The Translation offset x which gives us the ability to use our own coordinates system.
-     */
-    private float mTranslationOffsetX;
-
-    /**
-     * The Translation offset y which gives us the ability to use our own coordinates system.
-     */
-    private float mTranslationOffsetY;
 
     /**
      * the overdraw is true if the progress is over 1.0.
@@ -124,16 +111,6 @@ public class ARing {
     private float mRadius;
 
     /**
-     * The Horizontal inset calcualted in {@link #computeInsets(int, int, int)}
-     */
-    private int mHorizontalInset = 0;
-
-    /**
-     * The Vertical inset calcualted in {@link #computeInsets(int, int, int)}
-     */
-    private int mVerticalInset = 0;
-
-    /**
      * The Marker progress.
      */
     private float mMarkerProgress = 0.0f;
@@ -152,13 +129,6 @@ public class ARing {
      * the color of the progress.
      */
     private int mProgressColor;
-
-    /**
-     * The gravity of the view. Where should the Circle be drawn within the given bounds
-     * <p>
-     * {@link #computeInsets(int, int, int)}
-     */
-    private int mGravity = Gravity.CENTER;
 
     /**
      * @return true if the marker is visible
@@ -215,14 +185,9 @@ public class ARing {
 
         mThumbPosX = (float) (mRadius * Math.cos(0));
         mThumbPosY = (float) (mRadius * Math.sin(0));
-
-        mTranslationOffsetX = halfWidth + mHorizontalInset;
-        mTranslationOffsetY = halfWidth + mVerticalInset;
     }
 
     void draw(final Canvas canvas) {
-        canvas.translate(mTranslationOffsetX, mTranslationOffsetY);
-
         final float progressRotation = getCurrentRotation();
 
         // draw the background
@@ -258,54 +223,6 @@ public class ARing {
             mSquareRect.bottom = mThumbPosY + mThumbRadius / 3;
             canvas.drawRect(mSquareRect, mThumbColorPaint);
             canvas.restore();
-        }
-    }
-
-    /**
-     * Compute insets.
-     * <p>
-     * <pre>
-     *  ______________________
-     * |_________dx/2_________|
-     * |......| /'''''\|......|
-     * |-dx/2-|| View ||-dx/2-|
-     * |______| \_____/|______|
-     * |________ dx/2_________|
-     * </pre>
-     *
-     * @param dx the dx the horizontal unfilled space
-     * @param dy the dy the horizontal unfilled space
-     */
-    @SuppressLint("NewApi")
-    void computeInsets(int layoutDirection, final int dx, final int dy) {
-        int absoluteGravity = mGravity;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            absoluteGravity = Gravity.getAbsoluteGravity(mGravity, layoutDirection);
-        }
-
-        switch (absoluteGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
-            case Gravity.LEFT:
-                mHorizontalInset = 0;
-                break;
-            case Gravity.RIGHT:
-                mHorizontalInset = dx;
-                break;
-            case Gravity.CENTER_HORIZONTAL:
-            default:
-                mHorizontalInset = dx / 2;
-                break;
-        }
-        switch (absoluteGravity & Gravity.VERTICAL_GRAVITY_MASK) {
-            case Gravity.TOP:
-                mVerticalInset = 0;
-                break;
-            case Gravity.BOTTOM:
-                mVerticalInset = dy;
-                break;
-            case Gravity.CENTER_VERTICAL:
-            default:
-                mVerticalInset = dy / 2;
-                break;
         }
     }
 
@@ -462,14 +379,6 @@ public class ARing {
      */
     void setThumbEnabled(final boolean enabled) {
         mIsThumbEnabled = enabled;
-    }
-
-    /**
-     * set gravity of the View
-     * @param gravity
-     */
-    void setGravity(int gravity) {
-        mGravity = gravity;
     }
 
     /**

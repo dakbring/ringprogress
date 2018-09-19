@@ -13,8 +13,9 @@ public class HomeActivity extends Activity implements View.OnClickListener {
 
     private RingProgressBar mRingProgressBar;
 
-    private Button m01;
-    private Button mOne;
+    private Button vPlus;
+    private Button vMinus;
+    private Button mThree;
     private Button mZero;
 
     @Override
@@ -28,28 +29,33 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         mRingProgressBar.setMarkerEnabled(false);
         mRingProgressBar.setThumbEnabled(true);
 
-        m01 = (Button) findViewById(R.id.animate_01);
+        vPlus = (Button) findViewById(R.id.plus);
+        vMinus = (Button) findViewById(R.id.minus);
         mZero = (Button) findViewById(R.id.zero);
-        mOne = (Button) findViewById(R.id.one);
+        mThree = (Button) findViewById(R.id.three);
 
-        m01.setOnClickListener(this);
+        vPlus.setOnClickListener(this);
+        vMinus.setOnClickListener(this);
         mZero.setOnClickListener(this);
-        mOne.setOnClickListener(this);
+        mThree.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.animate_01:
+            case R.id.minus:
+                mRingProgressBar.startUpdateProgress(mRingProgressBar.getProgress() - 0.1f);
+                break;
+            case R.id.plus:
                 mRingProgressBar.startUpdateProgress(mRingProgressBar.getProgress() + 0.1f);
                 break;
             case R.id.zero:
                 mRingProgressBar.stopUpdateProgress();
                 mRingProgressBar.startUpdateProgress(0f, 2000);
                 break;
-            case R.id.one:
+            case R.id.three:
                 mRingProgressBar.stopUpdateProgress();
-                mRingProgressBar.startUpdateProgress(1f, 2000);
+                mRingProgressBar.startUpdateProgress(3f, 2000);
                 break;
         }
     }
