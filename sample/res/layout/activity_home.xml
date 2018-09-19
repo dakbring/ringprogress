@@ -3,20 +3,61 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/charcoal"
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context=".HomeActivity">
 
-    <com.pascalwelsch.holocircularprogressbar.RingProgressBar
-        android:id="@+id/holoCircularProgressBar"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_centerInParent="true"
-        app:progress="0.5"
-        app:progress_color="@android:color/holo_green_light"
-        app:progress_background_color="@android:color/darker_gray"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.pascalwelsch.holocircularprogressbar.RingProgressBar
+            android:id="@+id/activeTimeProgressBar"
+            android:layout_width="245dp"
+            android:layout_height="250dp"
+            android:layout_centerInParent="true"
+            app:icon="@drawable/ic_visualization_active_time"
+            app:icon_size="25dp"
+            app:progress_background_color="@color/hex1F000000"
+            app:progress_color="@color/hexFC8054"
+            app:stroke_width="6dp"/>
+
+        <com.pascalwelsch.holocircularprogressbar.RingProgressBar
+            android:id="@+id/stepsProgressBar"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_centerInParent="true"
+            app:icon="@drawable/ic_visualization_steps"
+            app:icon_size="25dp"
+            app:progress_background_color="@color/hex1F000000"
+            app:progress_color="@color/hexF56543"
+            app:stroke_width="6dp"/>
+
+        <com.pascalwelsch.holocircularprogressbar.RingProgressBar
+            android:id="@+id/caloriesProgressBar"
+            android:layout_width="135dp"
+            android:layout_height="135dp"
+            android:layout_centerInParent="true"
+            app:icon="@drawable/ic_visualization_calories"
+            app:icon_size="25dp"
+            app:progress_background_color="@color/hex1F000000"
+            app:progress_color="@color/hexEE593D"
+            app:stroke_width="6dp"/>
+
+        <com.pascalwelsch.holocircularprogressbar.RingProgressBar
+            android:id="@+id/sleepProgressBar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            app:icon="@drawable/ic_visualization_sleep"
+            app:icon_size="25dp"
+            app:progress_background_color="@color/hex1F000000"
+            app:progress_color="@color/hex708FE7"
+            app:stroke_width="6dp"/>
+    </RelativeLayout>
 
 
     <Button

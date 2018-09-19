@@ -2,13 +2,19 @@
 <resources>
 
     <declare-styleable name="RingProgressBar">
-        <attr name="stroke_width" format="dimension" />
-        <attr name="progress" format="float" />
-        <attr name="marker_progress" format="float" />
-        <attr name="progress_color" format="color" />
-        <attr name="progress_background_color" format="color" />
+        <attr name="stroke_width" format="dimension"/>
+        <attr name="progress" format="float"/>
+        <attr name="icon" format="reference"/>
+        <attr name="icon_size" format="dimension"/>
+        <attr name="max_progress" format="float|enum">
+            <enum name="one_circle" value="1"/>
+            <enum name="two_circle" value="2"/>
+            <enum name="three_circle" value="3"/>
+        </attr>
+        <attr name="progress_color" format="color"/>
+        <attr name="progress_background_color" format="color"/>
     </declare-styleable>
 
-    <attr name="circularProgressBarStyle" format="reference" />
+    <attr name="circularProgressBarStyle" format="reference"/>
 
 </resources>

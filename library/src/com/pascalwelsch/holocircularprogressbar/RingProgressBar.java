@@ -5,6 +5,8 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -46,6 +48,11 @@ public class RingProgressBar extends View {
      */
     private static final int DEFAULT_ANIMATION_DURATION = 1000;
 
+    /**
+     * used to load default size of icon if don't have value from attribute
+     */
+    private static final int DEFAULT_ICON_SIZE = 100;
+
     private static final int MAX_PROGRESS_ONE_CIRCLE = 1;
     private static final int MAX_PROGRESS_TWO_CIRCLE = 2;
     private static final int MAX_PROGRESS_THREE_CIRCLE = 3;
@@ -66,12 +73,6 @@ public class RingProgressBar extends View {
      * The stroke width used to paint the circle.
      */
     private int mCircleStrokeWidth = 10;
-
-    /**
-     * The Horizontal inset calculated in {@link #computeInsets(int, int)} depends on {@link
-     * #mGravity}.
-     */
-    private int mHorizontalInset = 0;
 
     /**
      * true if not all properties are set. then the view isn't drawn and there are no errors in the
@@ -110,10 +111,19 @@ public class RingProgressBar extends View {
     private float mTranslationOffsetY;
 
     /**
-     * The Vertical inset calculated in {@link #computeInsets(int, int)} depends on {@link
-     * #mGravity}..
+     * The icon get from attribute
      */
-    private int mVerticalInset;
+    private Bitmap mIcon;
+
+    /**
+     * The icon size get from attribute
+     */
+    private int mIconSize;
+
+    /**
+     * The max progress can show
+     */
+    private float mMaxProgress;
 
     /**
      * The animator run update progress
@@ -157,6 +167,11 @@ public class RingProgressBar extends View {
                 setProgressBackgroundColor(attributes.getColor(R.styleable.RingProgressBar_progress_background_color, Color.GREEN));
                 setProgress(attributes.getFloat(R.styleable.RingProgressBar_progress, 0.0f));
                 setWheelSize((int) attributes.getDimension(R.styleable.RingProgressBar_stroke_width, 10));
+                mIconSize = (int) attributes.getDimension(R.styleable.RingProgressBar_icon_size, 60);
+                mMaxProgress = attributes.getFloat(R.styleable.RingProgressBar_max_progress, 1f);
+
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), attributes.getResourceId(R.styleable.RingProgressBar_icon, 0));
+                mIcon = Bitmap.createScaledBitmap(icon, mIconSize, mIconSize, false);
             } finally {
                 // make sure recycle is always called.
                 attributes.recycle();
@@ -182,15 +197,15 @@ public class RingProgressBar extends View {
             canvas.drawArc(mCircleBounds_1, 270, mProgress > 1 ? 360 : progressRotation, false, mProgressColorPaint);
 
             if (mProgress > MAX_PROGRESS_ONE_CIRCLE) {
-                canvas.drawArc(mCircleBounds_2, 270, -(720 - progressRotation), false, mBackgroundColorPaint);
                 canvas.drawArc(mCircleBounds_2, 270, mProgress > 2 ? 360 : progressRotation - 360, false, mProgressColorPaint);
             }
             if (mProgress > MAX_PROGRESS_TWO_CIRCLE) {
-                canvas.drawArc(mCircleBounds_3, 270, -(360 - progressRotation), false, mBackgroundColorPaint);
                 canvas.drawArc(mCircleBounds_3, 270, mProgress == 3 ? 360 : progressRotation - 720, false, mProgressColorPaint);
             }
         }
 
+        canvas.translate(0, -mTranslationOffsetY);
+        canvas.drawBitmap(mIcon, -mIcon.getWidth() / 2, 0, null);
     }
 
     @Override
@@ -204,7 +219,7 @@ public class RingProgressBar extends View {
         final float ringWith = mCircleStrokeWidth * 1.1f;
 
         // -0.5f for pixel perfect fit inside the view bounds
-        float radius1 = halfWidth - ringWith;
+        float radius1 = halfWidth - mIconSize / 2;
         float radius2 = radius1 - ringWith;
         float radius3 = radius2 - ringWith;
 
@@ -272,7 +287,8 @@ public class RingProgressBar extends View {
             return;
         }
 
-        mProgress = progress < MAX_PROGRESS_THREE_CIRCLE ? progress : 3;
+        mMaxProgress = mMaxProgress < MAX_PROGRESS_THREE_CIRCLE ? mMaxProgress : MAX_PROGRESS_THREE_CIRCLE;
+        mProgress = progress < MAX_PROGRESS_THREE_CIRCLE && progress < mMaxProgress ? progress : mMaxProgress;
 
         if (!mIsInitializing) {
             invalidate();
@@ -286,7 +302,6 @@ public class RingProgressBar extends View {
      */
     public void setProgressBackgroundColor(final int color) {
         mProgressBackgroundColor = color;
-
         updateBackgroundColor();
     }
 

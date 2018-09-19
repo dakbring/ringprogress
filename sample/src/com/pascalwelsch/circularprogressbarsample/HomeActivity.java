@@ -11,7 +11,10 @@ public class HomeActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
 
-    private RingProgressBar mRingProgressBar;
+    private RingProgressBar mActiveTimeProgressBar;
+    private RingProgressBar mStepsProgressBar;
+    private RingProgressBar mCaloriesProgressBar;
+    private RingProgressBar mSleepProgressBar;
 
     private Button m01;
     private Button mOne;
@@ -22,7 +25,10 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        mRingProgressBar = (RingProgressBar) findViewById(R.id.holoCircularProgressBar);
+        mActiveTimeProgressBar = (RingProgressBar) findViewById(R.id.activeTimeProgressBar);
+        mStepsProgressBar = (RingProgressBar) findViewById(R.id.stepsProgressBar);
+        mCaloriesProgressBar = (RingProgressBar) findViewById(R.id.caloriesProgressBar);
+        mSleepProgressBar = (RingProgressBar) findViewById(R.id.sleepProgressBar);
 
         m01 = (Button) findViewById(R.id.animate_01);
         mZero = (Button) findViewById(R.id.zero);
@@ -32,23 +38,34 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         mZero.setOnClickListener(this);
         mOne.setOnClickListener(this);
 
-        mRingProgressBar.setWheelSize(40);
+        startAnimation();
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.animate_01:
-                mRingProgressBar.startUpdateProgress(mRingProgressBar.getProgress() + 1f/4, 500);
+                mActiveTimeProgressBar.setProgress(0f);
+                mStepsProgressBar.setProgress(0f);
+                mCaloriesProgressBar.setProgress(0f);
+                mSleepProgressBar.setProgress(0f);
+                startAnimation();
                 break;
             case R.id.zero:
-                mRingProgressBar.stopUpdateProgress();
-                mRingProgressBar.startUpdateProgress(0f, 2000);
+                mActiveTimeProgressBar.stopUpdateProgress();
+                mActiveTimeProgressBar.startUpdateProgress(0f, 2000);
                 break;
             case R.id.one:
-                mRingProgressBar.stopUpdateProgress();
-                mRingProgressBar.startUpdateProgress(mRingProgressBar.getProgress() + 1f, 2000);
+                mActiveTimeProgressBar.stopUpdateProgress();
+                mActiveTimeProgressBar.startUpdateProgress(mActiveTimeProgressBar.getProgress() + 1f, 2000);
                 break;
         }
+    }
+
+    private void startAnimation(){
+        mActiveTimeProgressBar.startUpdateProgress(1f*7/10);
+        mStepsProgressBar.startUpdateProgress(1f*9/10);
+        mCaloriesProgressBar.startUpdateProgress(1f/3);
+        mSleepProgressBar.startUpdateProgress(1f*4/5);
     }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="hexEE593D">#ee593d</color>
+    <color name="hexF56543">#f56543</color>
+    <color name="hexFC8054">#fc8054</color>
+    <color name="hex708FE7">#708fe7</color>
+    <color name="hex86CFE3">#86cfe3</color>
+    <color name="hexB5EFFF">#b5efff</color>
+    <color name="hex1F000000">#1f000000</color>
+
+    <color name="charcoal">#3d3934</color>
+    <color name="coolGray">#a3a19e</color>
+</resources>
