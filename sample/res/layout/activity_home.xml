@@ -19,10 +19,11 @@
             android:layout_width="245dp"
             android:layout_height="250dp"
             android:layout_centerInParent="true"
-            app:icon="@drawable/ic_visualization_active_time"
-            app:icon_size="25dp"
-            app:progress_background_color="@color/hex1F000000"
-            app:progress_color="@color/hexFC8054"
+            app:icon_size="20dp"
+            app:icon_source="@drawable/ic_visualization_active_time"
+            app:max_progress="two_circle"
+            app:ring_progress_background_color="@color/hex1F000000"
+            app:ring_progress_color="@color/hexFC8054"
             app:stroke_width="6dp"/>
 
         <com.pascalwelsch.holocircularprogressbar.RingProgressBar
@@ -30,10 +31,10 @@
             android:layout_width="190dp"
             android:layout_height="190dp"
             android:layout_centerInParent="true"
-            app:icon="@drawable/ic_visualization_steps"
-            app:icon_size="25dp"
-            app:progress_background_color="@color/hex1F000000"
-            app:progress_color="@color/hexF56543"
+            app:icon_size="20dp"
+            app:icon_source="@drawable/ic_visualization_steps"
+            app:ring_progress_background_color="@color/hex1F000000"
+            app:ring_progress_color="@color/hexF56543"
             app:stroke_width="6dp"/>
 
         <com.pascalwelsch.holocircularprogressbar.RingProgressBar
@@ -41,10 +42,10 @@
             android:layout_width="135dp"
             android:layout_height="135dp"
             android:layout_centerInParent="true"
-            app:icon="@drawable/ic_visualization_calories"
-            app:icon_size="25dp"
-            app:progress_background_color="@color/hex1F000000"
-            app:progress_color="@color/hexEE593D"
+            app:icon_size="20dp"
+            app:icon_source="@drawable/ic_visualization_calories"
+            app:ring_progress_background_color="@color/hex1F000000"
+            app:ring_progress_color="@color/hexEE593D"
             app:stroke_width="6dp"/>
 
         <com.pascalwelsch.holocircularprogressbar.RingProgressBar
@@ -52,10 +53,11 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerInParent="true"
-            app:icon="@drawable/ic_visualization_sleep"
-            app:icon_size="25dp"
-            app:progress_background_color="@color/hex1F000000"
-            app:progress_color="@color/hex708FE7"
+            app:icon_size="20dp"
+            app:icon_source="@drawable/ic_visualization_sleep"
+            app:max_progress="two_circle"
+            app:ring_progress_background_color="@color/hex1F000000"
+            app:ring_progress_color="@color/hex708FE7"
             app:stroke_width="6dp"/>
     </RelativeLayout>
 
@@ -76,6 +78,15 @@
         android:layout_alignBottom="@+id/zero"
         android:layout_toRightOf="@+id/zero"
         android:text="1"/>
+
+    <Button
+        android:id="@+id/animate_00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/zero"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/animate_01"
+        android:text="scale"/>
 
     <Button
         android:id="@+id/animate_01"

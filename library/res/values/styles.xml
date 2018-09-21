@@ -5,8 +5,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="stroke_width">5dp</item>
         <item name="progress" format="float">0.1</item>
-        <item name="progress_color">#ffff4444</item>
-        <item name="progress_background_color">#ffffffff</item>
+        <item name="ring_progress_color">#ffff4444</item>
+        <item name="ring_progress_background_color">#ffffffff</item>
     </style>
     
     <style name="CircularProgressBarLight">
@@ -14,7 +14,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="stroke_width">5dp</item>
         <item name="progress" format="float">0.1</item>
-        <item name="progress_color">#ffff4444</item>
-        <item name="progress_background_color">#aaa</item>
+        <item name="ring_progress_color">#ffff4444</item>
+        <item name="ring_progress_background_color">#aaa</item>
     </style>
 </resources>

@@ -1,4 +1,5 @@
 apply plugin: 'android'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 19
@@ -22,4 +23,8 @@ android {
 
 dependencies {
     compile project(':library')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

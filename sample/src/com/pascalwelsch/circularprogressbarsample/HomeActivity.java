@@ -16,6 +16,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     private RingProgressBar mCaloriesProgressBar;
     private RingProgressBar mSleepProgressBar;
 
+    private Button m00;
     private Button m01;
     private Button mOne;
     private Button mZero;
@@ -30,6 +31,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         mCaloriesProgressBar = (RingProgressBar) findViewById(R.id.caloriesProgressBar);
         mSleepProgressBar = (RingProgressBar) findViewById(R.id.sleepProgressBar);
 
+        m00 = (Button) findViewById(R.id.animate_00);
         m01 = (Button) findViewById(R.id.animate_01);
         mZero = (Button) findViewById(R.id.zero);
         mOne = (Button) findViewById(R.id.one);
@@ -44,6 +46,9 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.animate_00:
+//                mActiveTimeProgressBar.startScaleDown();
+                break;
             case R.id.animate_01:
                 mActiveTimeProgressBar.setProgress(0f);
                 mStepsProgressBar.setProgress(0f);
@@ -62,10 +67,10 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    private void startAnimation(){
-        mActiveTimeProgressBar.startUpdateProgress(1f*7/10);
-        mStepsProgressBar.startUpdateProgress(1f*9/10);
-        mCaloriesProgressBar.startUpdateProgress(1f/3);
-        mSleepProgressBar.startUpdateProgress(1f*4/5);
+    private void startAnimation() {
+        mActiveTimeProgressBar.startUpdateProgress(1f * 7 / 10);
+        mStepsProgressBar.startUpdateProgress(1f * 9 / 10);
+        mCaloriesProgressBar.startUpdateProgress(1f / 3);
+        mSleepProgressBar.startUpdateProgress(1f * 5 / 4);
     }
 }
